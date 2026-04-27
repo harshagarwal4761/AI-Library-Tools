@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface ToolRepository extends JpaRepository<Tool, Long> {
     List<Tool> findByUserId(Long userId);
+    List<Tool> findByUserIdAndTag(Long userId, String tag);
 }

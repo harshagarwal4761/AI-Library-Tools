@@ -11,8 +11,39 @@ const TOOL_ICONS = {
     'gemini': '✨',
     'dall-e': '🎭',
     'notion': '📝',
+    'sora': '🎬',
+    'runway': '🎬',
+    'cursor': '💻',
+    'github': '💻',
+    'gamma': '📊',
+    'beautiful': '📊',
     'default': '🔧'
 };
+
+const TAG_COLORS = {
+    'Image Generation':    { bg: 'rgba(168,85,247,0.15)',  border: 'rgba(168,85,247,0.35)',  text: '#c084fc' },
+    'Video Generation':    { bg: 'rgba(239,68,68,0.15)',   border: 'rgba(239,68,68,0.35)',   text: '#f87171' },
+    'Coding':              { bg: 'rgba(34,197,94,0.15)',   border: 'rgba(34,197,94,0.35)',   text: '#4ade80' },
+    'Project Development': { bg: 'rgba(251,191,36,0.15)',  border: 'rgba(251,191,36,0.35)',  text: '#fbbf24' },
+    'General Help':        { bg: 'rgba(99,102,241,0.15)',  border: 'rgba(99,102,241,0.35)',  text: '#818cf8' },
+    'Agentic AI':          { bg: 'rgba(6,182,212,0.15)',   border: 'rgba(6,182,212,0.35)',   text: '#22d3ee' },
+    'PPT Generation':      { bg: 'rgba(249,115,22,0.15)',  border: 'rgba(249,115,22,0.35)',  text: '#fb923c' },
+    'Others':              { bg: 'rgba(100,116,139,0.15)', border: 'rgba(100,116,139,0.35)', text: '#94a3b8' }
+};
+
+const TAG_ICONS = {
+    'Image Generation':    '🖼️',
+    'Video Generation':    '🎬',
+    'Coding':              '💻',
+    'Project Development': '🛠️',
+    'General Help':        '💬',
+    'Agentic AI':          '🤖',
+    'PPT Generation':      '📊',
+    'Others':              '🔧'
+};
+
+let allTools = [];
+let activeFilter = 'all';
 
 function getToolIcon(name) {
     const lower = name.toLowerCase();
@@ -20,6 +51,13 @@ function getToolIcon(name) {
         if (lower.includes(key)) return icon;
     }
     return TOOL_ICONS.default;
+}
+
+function getTagChip(tag) {
+    const t = tag || 'Others';
+    const colors = TAG_COLORS[t] || TAG_COLORS['Others'];
+    const icon = TAG_ICONS[t] || '🔧';
+    return `<span class="tag-chip" style="background:${colors.bg};border-color:${colors.border};color:${colors.text};">${icon} ${escapeHtml(t)}</span>`;
 }
 
 function getToken() {
@@ -161,6 +199,60 @@ function logout() {
     window.location.href = '/login';
 }
 
+// ─── Filter Logic ─────────────────────────────────────────────────────────────
+
+function filterTools(tag, pillEl) {
+    activeFilter = tag;
+
+    // Update pill active state
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    if (pillEl) pillEl.classList.add('active');
+
+    renderTools(allTools);
+}
+
+function renderTools(tools) {
+    const grid = document.getElementById('tools-grid');
+    const filteredCounter = document.getElementById('filtered-count');
+    if (!grid) return;
+
+    const visible = activeFilter === 'all'
+        ? tools
+        : tools.filter(t => t.tag === activeFilter);
+
+    if (filteredCounter) filteredCounter.textContent = visible.length;
+
+    if (visible.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <div class="empty-title">${activeFilter === 'all' ? 'No tools added yet' : 'No tools for this category'}</div>
+                <p>${activeFilter === 'all' ? 'Start by adding your favorite AI tools above' : 'Try a different filter or add a new tool'}</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = visible.map(tool => `
+        <div class="tool-card" id="tool-${tool.id}">
+            <div class="tool-icon">${getToolIcon(tool.name)}</div>
+            <div class="tool-name">${escapeHtml(tool.name)}</div>
+            ${getTagChip(tool.tag)}
+            <div class="tool-url">${escapeHtml(tool.url)}</div>
+            <div class="tool-actions">
+                <a href="${escapeHtml(tool.url)}" target="_blank" rel="noopener" class="tool-visit">
+                    Visit ↗
+                </a>
+                <button class="btn btn-danger" onclick="deleteTool(${tool.id})">
+                    Delete
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ─── Load Tools ───────────────────────────────────────────────────────────────
+
 async function loadTools() {
     const grid = document.getElementById('tools-grid');
     const counter = document.getElementById('tools-count');
@@ -177,36 +269,11 @@ async function loadTools() {
             return;
         }
 
-        const tools = await res.json();
+        allTools = await res.json();
 
-        if (counter) counter.textContent = tools.length;
+        if (counter) counter.textContent = allTools.length;
 
-        if (tools.length === 0) {
-            grid.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">🔍</div>
-                    <div class="empty-title">No tools added yet</div>
-                    <p>Start by adding your favorite AI tools above</p>
-                </div>
-            `;
-            return;
-        }
-
-        grid.innerHTML = tools.map(tool => `
-            <div class="tool-card" id="tool-${tool.id}">
-                <div class="tool-icon">${getToolIcon(tool.name)}</div>
-                <div class="tool-name">${escapeHtml(tool.name)}</div>
-                <div class="tool-url">${escapeHtml(tool.url)}</div>
-                <div class="tool-actions">
-                    <a href="${escapeHtml(tool.url)}" target="_blank" rel="noopener" class="tool-visit">
-                        Visit ↗
-                    </a>
-                    <button class="btn btn-danger" onclick="deleteTool(${tool.id})">
-                        Delete
-                    </button>
-                </div>
-            </div>
-        `).join('');
+        renderTools(allTools);
 
     } catch (err) {
         grid.innerHTML = `
@@ -219,15 +286,18 @@ async function loadTools() {
     }
 }
 
+// ─── Add Tool ─────────────────────────────────────────────────────────────────
+
 async function handleAddTool(event) {
     event.preventDefault();
     hideError('tool-error');
 
     const name = document.getElementById('tool-name').value.trim();
-    const url = document.getElementById('tool-url').value.trim();
+    const url  = document.getElementById('tool-url').value.trim();
+    const tag  = document.getElementById('tool-tag').value;
 
     if (!name || !url) {
-        showError('tool-error', 'Please fill in both fields');
+        showError('tool-error', 'Please fill in both name and URL fields');
         return;
     }
 
@@ -235,7 +305,7 @@ async function handleAddTool(event) {
         const res = await fetch(API_BASE + '/api/tools', {
             method: 'POST',
             headers: authHeaders(),
-            body: JSON.stringify({ name, url })
+            body: JSON.stringify({ name, url, tag })
         });
 
         if (res.status === 401 || res.status === 403) {
@@ -246,6 +316,7 @@ async function handleAddTool(event) {
         if (res.ok) {
             document.getElementById('tool-name').value = '';
             document.getElementById('tool-url').value = '';
+            document.getElementById('tool-tag').value = 'Others';
             loadTools();
         } else {
             const data = await res.json();
@@ -255,6 +326,8 @@ async function handleAddTool(event) {
         showError('tool-error', 'Network error. Please try again.');
     }
 }
+
+// ─── Delete Tool ──────────────────────────────────────────────────────────────
 
 async function deleteTool(id) {
     try {
@@ -280,6 +353,8 @@ async function deleteTool(id) {
         console.error('Delete failed');
     }
 }
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
 
 function escapeHtml(text) {
     const div = document.createElement('div');

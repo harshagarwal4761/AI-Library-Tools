@@ -26,10 +26,10 @@ public class ToolService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Tool tool = new Tool(request.getName(), request.getUrl(), user);
+        Tool tool = new Tool(request.getName(), request.getUrl(), request.getTag(), user);
         tool = toolRepository.save(tool);
 
-        return new ToolResponse(tool.getId(), tool.getName(), tool.getUrl());
+        return new ToolResponse(tool.getId(), tool.getName(), tool.getUrl(), tool.getTag());
     }
 
     public List<ToolResponse> getToolsByUser(String username) {
@@ -38,7 +38,17 @@ public class ToolService {
 
         return toolRepository.findByUserId(user.getId())
                 .stream()
-                .map(tool -> new ToolResponse(tool.getId(), tool.getName(), tool.getUrl()))
+                .map(tool -> new ToolResponse(tool.getId(), tool.getName(), tool.getUrl(), tool.getTag()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ToolResponse> getToolsByUserAndTag(String username, String tag) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return toolRepository.findByUserIdAndTag(user.getId(), tag)
+                .stream()
+                .map(tool -> new ToolResponse(tool.getId(), tool.getName(), tool.getUrl(), tool.getTag()))
                 .collect(Collectors.toList());
     }
 

@@ -5,11 +5,13 @@ public class ToolResponse {
     private Long id;
     private String name;
     private String url;
+    private String tag;
 
-    public ToolResponse(Long id, String name, String url) {
+    public ToolResponse(Long id, String name, String url, String tag) {
         this.id = id;
         this.name = name;
         this.url = url;
+        this.tag = (tag != null) ? tag : "Others";
     }
 
     public Long getId() {
@@ -34,5 +36,13 @@ public class ToolResponse {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }
