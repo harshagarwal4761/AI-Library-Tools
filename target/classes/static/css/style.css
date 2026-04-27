@@ -598,6 +598,87 @@ body::before {
     margin-top: 0.25rem;
 }
 
+/* ── Form Select ─────────────────────────────────────────────────────────── */
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8b9e' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.form-select option {
+    background: #1a1a28;
+    color: #f0f0f5;
+}
+
+/* ── Tag Chip ─────────────────────────────────────────────────────────────── */
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 100px;
+    border: 1px solid;
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.02em;
+    transition: var(--transition-fast);
+}
+
+/* ── Filter Bar ───────────────────────────────────────────────────────────── */
+.filter-bar-section {
+    margin-bottom: 1.5rem;
+}
+
+.filter-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.65rem;
+}
+
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: 1px solid var(--border-subtle);
+    border-radius: 100px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    outline: none;
+}
+
+.filter-pill:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-accent);
+    color: var(--text-primary);
+}
+
+.filter-pill.active {
+    background: var(--gradient-accent);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+}
+
 @media (max-width: 768px) {
     .auth-card {
         padding: 2rem 1.5rem;
@@ -630,5 +711,14 @@ body::before {
 
     .navbar-user {
         display: none;
+    }
+
+    .filter-bar {
+        gap: 0.4rem;
+    }
+
+    .filter-pill {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.75rem;
     }
 }

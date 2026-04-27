@@ -29,7 +29,11 @@
             <div class="stats-bar">
                 <div class="stat-item">
                     <div class="stat-value" id="tools-count">0</div>
-                    <div class="stat-label">Active Tools</div>
+                    <div class="stat-label">Total Tools</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="filtered-count">0</div>
+                    <div class="stat-label">Shown</div>
                 </div>
             </div>
 
@@ -49,8 +53,37 @@
                         <label class="form-label" for="tool-url">URL</label>
                         <input type="url" id="tool-url" class="form-input" placeholder="https://..." required>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tool-tag">Category</label>
+                        <select id="tool-tag" class="form-input form-select">
+                            <option value="Image Generation">🖼️ Image Generation</option>
+                            <option value="Video Generation">🎬 Video Generation</option>
+                            <option value="Coding">💻 Coding</option>
+                            <option value="Project Development">🛠️ Project Development</option>
+                            <option value="General Help">💬 General Help</option>
+                            <option value="Agentic AI">🤖 Agentic AI</option>
+                            <option value="PPT Generation">📊 PPT Generation</option>
+                            <option value="Others" selected>🔧 Others</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Add Tool</button>
                 </form>
+            </section>
+
+            <!-- Filter Bar -->
+            <section class="filter-bar-section">
+                <div class="filter-label">Filter by Category</div>
+                <div class="filter-bar" id="filter-bar">
+                    <button class="filter-pill active" data-tag="all" onclick="filterTools('all', this)">All</button>
+                    <button class="filter-pill" data-tag="Image Generation" onclick="filterTools('Image Generation', this)">🖼️ Image Generation</button>
+                    <button class="filter-pill" data-tag="Video Generation" onclick="filterTools('Video Generation', this)">🎬 Video Generation</button>
+                    <button class="filter-pill" data-tag="Coding" onclick="filterTools('Coding', this)">💻 Coding</button>
+                    <button class="filter-pill" data-tag="Project Development" onclick="filterTools('Project Development', this)">🛠️ Project Development</button>
+                    <button class="filter-pill" data-tag="General Help" onclick="filterTools('General Help', this)">💬 General Help</button>
+                    <button class="filter-pill" data-tag="Agentic AI" onclick="filterTools('Agentic AI', this)">🤖 Agentic AI</button>
+                    <button class="filter-pill" data-tag="PPT Generation" onclick="filterTools('PPT Generation', this)">📊 PPT Generation</button>
+                    <button class="filter-pill" data-tag="Others" onclick="filterTools('Others', this)">🔧 Others</button>
+                </div>
             </section>
 
             <section class="tools-section">
