@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Personal AI Tools Hub</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}"></script>
+</head>
+<body onload="initAuthPage()">
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-logo">🚀</div>
+                    <h1 class="auth-title">Welcome Back</h1>
+                    <p class="auth-subtitle">Access your personal AI tools hub</p>
+                </div>
+
+                <div id="login-error" class="error-message"></div>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="login-username">Username</label>
+                        <input type="text" id="login-username" class="form-input" placeholder="Enter your username" required minlength="3">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label class="form-label" for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required minlength="6">
+                    </div>
+
+                    <button type="submit" id="login-btn" class="btn btn-primary">Sign In</button>
+                </form>
+
+                <div class="auth-link">
+                    Don't have an account? <a href="/signup">Create one</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
