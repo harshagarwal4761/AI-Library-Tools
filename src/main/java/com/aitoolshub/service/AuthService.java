@@ -19,15 +19,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final ToolService toolService;
 
     public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       JwtUtils jwtUtils,
-                       AuthenticationManager authenticationManager) {
+            PasswordEncoder passwordEncoder,
+            JwtUtils jwtUtils,
+            AuthenticationManager authenticationManager,
+            ToolService toolService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
+        this.toolService = toolService;
     }
 
     public AuthResponse signup(SignupRequest request) {
@@ -37,9 +40,9 @@ public class AuthService {
 
         User user = new User(
                 request.getUsername(),
-                passwordEncoder.encode(request.getPassword())
-        );
+                passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+        toolService.seedDefaultTools(user);
 
         String token = jwtUtils.generateToken(user.getUsername());
         return new AuthResponse(token, user.getUsername(), "Registration successful");
@@ -49,9 +52,7 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
-                        request.getPassword()
-                )
-        );
+                        request.getPassword()));
 
         String token = jwtUtils.generateToken(request.getUsername());
         return new AuthResponse(token, request.getUsername(), "Login successful");
