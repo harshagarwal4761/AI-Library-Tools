@@ -362,7 +362,38 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+
+// ─── Theme Toggle ────────────────────────────────────────────────────────────────
+function applySavedTheme() {
+    const saved = localStorage.getItem('theme');
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        if (toggleBtn) toggleBtn.textContent = '☀️';
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        if (toggleBtn) toggleBtn.textContent = '🌙';
+    }
+}
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const isLight = html.getAttribute('data-theme') === 'light';
+    if (isLight) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.textContent = '🌙';
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.textContent = '☀️';
+    }
+}
+
 function initDashboard() {
+    applySavedTheme();
     if (!isAuthenticated()) {
         window.location.href = '/login';
         return;
@@ -377,6 +408,7 @@ function initDashboard() {
 }
 
 function initAuthPage() {
+    applySavedTheme();
     if (isAuthenticated()) {
         window.location.href = '/dashboard';
     }
