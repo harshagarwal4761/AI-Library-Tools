@@ -62,6 +62,7 @@
     --radius-xl: 20px;
     --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Light-mode UI overrides are defined in separate [data-theme='light'] blocks */
 }
 
 body {
@@ -296,10 +297,9 @@ body::before {
     font-size: 0.8125rem;
 }
 
-.btn-ghost:hover {
-    background: var(--bg-card-hover);
-    color: var(--text-primary);
-}
+.btn-ghost:hover { background: var(--gradient-accent); opacity: 0.9; }
+[data-theme='light'] .navbar { background: #f0f0f0; color: var(--text-primary); }
+[data-theme='light'] .btn-primary { background: var(--gradient-accent); color: #fff; }
 
 .auth-link {
     text-align: center;
